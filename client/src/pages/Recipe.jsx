@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import { FaBookmark } from "react-icons/fa";
 
 function Recipe() {
   let params = useParams();
@@ -23,10 +24,34 @@ function Recipe() {
   useEffect(() => {
     fetchDetails();
   }, [params.name]);
+
+  const BookmarkIcon = () => {
+    const [isBookmarked, setIsBookmarked] = useState(false);
+
+    const handleBookmarkClick = () => {
+      setIsBookmarked(!isBookmarked);
+    };
+
+    return (
+      <div onClick={handleBookmarkClick} style={{ fontSize: "25px" }}>
+        {isBookmarked ? (
+          <FaBookmark color="red" />
+        ) : (
+          <FaBookmark color="gray" />
+        )}
+      </div>
+    );
+  };
+
   return (
     <DetailWrapper>
       <h2>{details.title}</h2>
-      <img src={details.image} alt=""></img>
+      <div className="w-full absolute">
+        <div className="float-right">
+          <BookmarkIcon />
+        </div>
+      </div>
+      <img src={details.image} alt="Dish Image"></img>
       <Buttons>
         <Button
           className={activeTab === "instructions" ? "active" : ""}
@@ -64,6 +89,7 @@ const DetailWrapper = styled.div`
   align-items: center;
   margin-bottom: 5rem;
   display: flex;
+  position: relative;
   img {
     width: 40vw;
     max-width: 400px;
