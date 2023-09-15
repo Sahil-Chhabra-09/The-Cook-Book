@@ -3,52 +3,137 @@ import styled from "styled-components";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { FaBookmark } from "react-icons/fa";
+import { toast } from "react-toastify";
 
 function Recipe() {
   let params = useParams();
   const [details, setDetails] = useState({});
   const [activeTab, setActiveTab] = useState("instructions");
+  const [isBookmarked, setIsBookmarked] = useState(false);
+
+  const apiUrl = process.env.REACT_APP_SERVER_API_URL;
+
+  const checkIfBookmarked = async () => {
+    await axios
+      .post(
+        `${apiUrl}/bmark/check`,
+        {
+          uid: localStorage.getItem("uid"),
+          bookmark: { id: details.id },
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${String(localStorage.getItem("token"))}`,
+          },
+        }
+      )
+      .then((res) => {
+        setIsBookmarked(res.data.exists);
+      })
+      .catch((error) => {
+        console.log("Error occured : ", error);
+      });
+  };
+
   const fetchDetails = async () => {
     axios
       .get(
         `https://api.spoonacular.com/recipes/${params.name}/information?apiKey=${process.env.REACT_APP_API_KEY2}`
       )
       .then((response) => {
-        setDetails(response.data);
+        const { image, title, id, instructions, summary, extendedIngredients } =
+          response.data;
+        setDetails({
+          image,
+          title,
+          id,
+          instructions,
+          summary,
+          extendedIngredients,
+        });
       })
       .catch((error) => {
         console.log(error);
       });
   };
 
+  const handleBookmarkClick = async () => {
+    if (
+      localStorage.getItem("token") === null &&
+      localStorage.getItem("uid") === null &&
+      localStorage.getItem("name") === null
+    ) {
+      return toast.error("Please login first");
+    }
+    if (!isBookmarked) {
+      await axios
+        .post(
+          `${apiUrl}/bmark`,
+          {
+            uid: localStorage.getItem("uid"),
+            bookmark: details,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${String(localStorage.getItem("token"))}`,
+            },
+          }
+        )
+        .then((res) => {
+          setIsBookmarked(true);
+          toast.success("Bookmarked");
+        })
+        .catch((error) => {
+          console.log("Error occured : ", error);
+        });
+    } else {
+      await axios
+        .post(
+          `${apiUrl}/bmark/delete`,
+          {
+            uid: localStorage.getItem("uid"),
+            bookmark: details,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${String(localStorage.getItem("token"))}`,
+            },
+          }
+        )
+        .then((res) => {
+          setIsBookmarked(false);
+          toast.success("Removed");
+        })
+        .catch((error) => {
+          console.log("Error occured : ", error);
+        });
+    }
+  };
+
   useEffect(() => {
     fetchDetails();
   }, [params.name]);
 
-  const BookmarkIcon = () => {
-    const [isBookmarked, setIsBookmarked] = useState(false);
-
-    const handleBookmarkClick = () => {
-      setIsBookmarked(!isBookmarked);
-    };
-
-    return (
-      <div onClick={handleBookmarkClick} style={{ fontSize: "25px" }}>
-        {isBookmarked ? (
-          <FaBookmark color="red" />
-        ) : (
-          <FaBookmark color="gray" />
-        )}
-      </div>
-    );
-  };
-
+  useEffect(() => {
+    if (details != {}) {
+      checkIfBookmarked();
+    }
+  }, [details]);
   return (
     <DetailWrapper>
       <h2>{details.title}</h2>
       <div className="w-full absolute">
         <div className="float-right">
-          <BookmarkIcon />
+          <div
+            onClick={handleBookmarkClick}
+            style={{ fontSize: "25px", cursor: "pointer" }}
+          >
+            {isBookmarked ? (
+              <FaBookmark color="red" />
+            ) : (
+              <FaBookmark color="gray" />
+            )}
+          </div>
         </div>
       </div>
       <img src={details.image} alt="Dish Image"></img>

@@ -2,27 +2,30 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { FaSearch } from "react-icons/fa";
 //for navigating to a new page on click of the submit button,
-import {Navigate, useNavigate} from 'react-router-dom'
+import { Navigate, useNavigate } from "react-router-dom";
 
 function Search() {
   const [input, setInput] = useState("");
   const navigate = useNavigate();
 
-  const submitHandler = (e) =>{
-    e.preventDefault();     //preventing default page update
-    setInput("")
-    navigate(`/searched/${input}`)
-  }
+  const submitHandler = (e) => {
+    e.preventDefault(); //preventing default page update
+    setInput("");
+    navigate(`/searched/${input}`);
+  };
   return (
-    <FormStyle onSubmit = {submitHandler}>
+    <FormStyle onSubmit={submitHandler}>
       <FaSearch />
-      <input type="text" value={input} onChange={(event) => setInput(event.target.value)}/>
+      <input
+        type="text"
+        value={input}
+        onChange={(event) => setInput(event.target.value)}
+      />
     </FormStyle>
   );
 }
 
 const FormStyle = styled.form`
-  margin-top: 4rem;
   position: relative;
   width: 100%;
   height: 35px;
