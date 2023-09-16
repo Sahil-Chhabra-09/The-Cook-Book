@@ -9,10 +9,15 @@ import {
 } from "@mui/material";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { logoutAction } from "../redux/auth";
+import { useDispatch } from "react-redux";
 
 function LoginLogout() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [name, setName] = useState("Ed Roh");
+  const isLoggedInGlobal = useSelector((state) => state.auth.isLoggedIn);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (
@@ -25,7 +30,11 @@ function LoginLogout() {
     } else {
       setIsLoggedIn(false);
     }
-  }, [localStorage]);
+  }, []);
+
+  useEffect(() => {
+    setIsLoggedIn(isLoggedInGlobal);
+  }, [isLoggedInGlobal]);
 
   const navigate = useNavigate();
   const handleLoginOrLogout = () => {
@@ -34,6 +43,7 @@ function LoginLogout() {
       localStorage.removeItem("token");
       localStorage.removeItem("uid");
       localStorage.removeItem("name");
+      dispatch(logoutAction());
       setIsLoggedIn(false);
     } else {
       navigate("/auth");

@@ -14,6 +14,8 @@ import * as yup from "yup"; //validation library
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Navbar from "./Navbar";
+import { useDispatch } from "react-redux";
+import { loginAction } from "../redux/auth";
 
 //yup validation schema
 const registerSchema = yup.object().shape({
@@ -47,6 +49,8 @@ const Form = () => {
   const isRegister = pageType === "register";
   const apiUrl = process.env.REACT_APP_SERVER_API_URL;
 
+  const dispatch = useDispatch();
+
   const register = async (values, onSubmitProps) => {
     await axios
       .post(`${apiUrl}/register`, values)
@@ -78,6 +82,7 @@ const Form = () => {
       .post(`${apiUrl}/login`, values)
       .then((res) => {
         afterLoginTasks(res.data, onSubmitProps);
+        dispatch(loginAction());
         toast.success("Logged In Successfully");
       })
       .catch((error) => {

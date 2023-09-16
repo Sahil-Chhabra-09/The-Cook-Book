@@ -2,13 +2,13 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
-import {Link} from 'react-router-dom'
+import { Link } from "react-router-dom";
 
 function Searched() {
   const [searchedRecipes, setSearchedRecipes] = useState([]);
   let params = useParams();
   const getSearched = async (name) => {
-    const data = await axios
+    await axios
       .get(
         `https://api.spoonacular.com/recipes/complexSearch?apiKey=${process.env.REACT_APP_API_KEY2}&number=12&query=${name}`
       )
