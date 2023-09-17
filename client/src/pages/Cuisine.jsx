@@ -71,26 +71,29 @@ function Cuisine() {
       initial={{ opacity: 0 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
+      className="mt-12 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 md:mt-0"
     >
-      {cuisine.length
-        ? cuisine.map((item) => {
-            return (
-              <Card key={item.id}>
-                <Link to={"/recipe/" + item.id}>
-                  <img src={item.image} alt={item.title} />
-                  <h4>{item.title}</h4>
-                </Link>
-              </Card>
-            );
-          })
-        : null}
+      {cuisine.length ? (
+        cuisine.map((item) => {
+          return (
+            <Card key={item.id}>
+              <Link to={"/recipe/" + item.id}>
+                <img src={item.image} alt={item.title} />
+                <h4>{item.title.split(" ").slice(-4).join(" ")}</h4>
+              </Link>
+            </Card>
+          );
+        })
+      ) : (
+        <NoData />
+      )}
     </Grid>
   );
 }
 
 const Grid = styled(motion.div)`
   display: grid;
-  grid-template-columns: repeat(3, minmax(100px, 1fr));
+  grid-template-columns: minmax(100px, 1fr));
   grid-template-rows: 1fr 1fr 1fr;
   grid-gap: 2.5rem;
 `;

@@ -29,7 +29,7 @@ const FormStyle = styled.form`
   position: relative;
   width: 100%;
   height: 35px;
-  margin-top: 16px;
+  margin-top: 32px;
   input {
     background-color: brown;
     background: linear-gradient(35deg, #494949, #313131);

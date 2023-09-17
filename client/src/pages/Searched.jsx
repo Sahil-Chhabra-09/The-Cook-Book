@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import NoData from "./NoData";
 
 function Searched() {
   const [searchedRecipes, setSearchedRecipes] = useState([]);
@@ -24,26 +25,27 @@ function Searched() {
     getSearched(params.search); //whatever we added in path of the route
   }, [params.search]);
   return (
-    <Grid>
-      {searchedRecipes.length
-        ? searchedRecipes.map((item) => {
-            return (
-              <Card key={item.id}>
-                <Link to={"/recipe/" + item.id}>
-                  <img src={item.image} alt={item.title} />
-                  <h4>{item.title}</h4>
-                </Link>
-              </Card>
-            );
-          })
-        : null}
+    <Grid className="mt-12 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 md:mt-0">
+      {searchedRecipes.length ? (
+        searchedRecipes.map((item) => {
+          return (
+            <Card key={item.id}>
+              <Link to={"/recipe/" + item.id}>
+                <img src={item.image} alt={item.title} />
+                <h4>{item.title}</h4>
+              </Link>
+            </Card>
+          );
+        })
+      ) : (
+        <NoData />
+      )}
     </Grid>
   );
 }
 
 const Grid = styled.div`
   display: grid;
-  grid-template-columns: repeat(3, minmax(100px, 1fr));
   grid-template-rows: 1fr 1fr 1fr;
   grid-gap: 2.5rem;
 `;

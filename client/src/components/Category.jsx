@@ -2,12 +2,17 @@ import { FaPizzaSlice, FaHamburger } from "react-icons/fa";
 import { GiNoodles, GiIndianPalace } from "react-icons/gi";
 import styled from "styled-components";
 import { NavLink } from "react-router-dom";
+import { useMediaQuery } from "@mui/material";
 
 //NavLink gives us class called active
 
 //in react we don't want to use anchor tag it basically refreshes the page and navigates to somewhere else.
 
 function Category() {
+  const isMobile = useMediaQuery("(max-width: 768px)");
+  if (isMobile) {
+    return <></>;
+  }
   return (
     <List>
       <SLink to={"/cuisine/Italian"}>
@@ -53,24 +58,25 @@ const SLink = styled(NavLink)`
   cursor: pointer;
   transform: scale(0.8);
 
-  h4{
+  h4 {
     color: white;
     font-size: 0.8rem;
   }
-  svg{
+  svg {
     color: white;
-    font-size: 1.5rem
+    font-size: 1.5rem;
   }
-  &.active{   //creating a class
+  &.active {
+    //creating a class
     background: linear-gradient(to right, #f27121, #e94057);
 
-    svg{
+    svg {
       color: white;
     }
-    hr{
+    hr {
       color: white;
     }
   }
-`
+`;
 
 export default Category;

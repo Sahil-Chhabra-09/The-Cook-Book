@@ -120,7 +120,7 @@ function Recipe() {
     }
   }, [details]);
   return (
-    <DetailWrapper>
+    <DetailWrapper className="mt-12 md:mt-0">
       <h2>{details.title}</h2>
       <div className="w-full absolute">
         <div className="float-right">
