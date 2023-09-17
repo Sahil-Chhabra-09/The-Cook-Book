@@ -11,14 +11,17 @@ import { useNavigate } from "react-router-dom";
 function Cuisine() {
   const [cuisine, setCuisine] = useState([]);
   const navigate = useNavigate();
+  const apiUrl = process.env.REACT_APP_API_URL;
 
   let params = useParams();
 
   const getCuisine = async (name) => {
     const data = await axios
-      .get(
-        `https://api.spoonacular.com/recipes/complexSearch?apiKey=${process.env.REACT_APP_API_KEY2}&number=10&cuisine=${name}`
-      )
+      .get(`${apiUrl}/spoon/cuisine`, {
+        params: {
+          name: name,
+        },
+      })
       .then((response) => {
         setCuisine(response.data.results);
       })
@@ -27,9 +30,9 @@ function Cuisine() {
       });
   };
 
-  const getCuisineFromLocalStorage = async () => {
+  const getBookmarksFromDB = async () => {
     await axios
-      .get(`${process.env.REACT_APP_SERVER_API_URL}/bmark`, {
+      .get(`${apiUrl}/bmark`, {
         params: {
           uid: localStorage.getItem("uid"),
         },
@@ -52,7 +55,7 @@ function Cuisine() {
         localStorage.getItem("uid") != null &&
         localStorage.getItem("name") != null
       ) {
-        getCuisineFromLocalStorage();
+        getBookmarksFromDB();
       } else {
         navigate("/");
       }

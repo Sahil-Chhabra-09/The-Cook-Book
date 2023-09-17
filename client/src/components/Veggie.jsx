@@ -10,6 +10,7 @@ import NoData from "../pages/NoData";
 
 function Veggie() {
   const [veggie, setVeggie] = useState([]);
+  const apiUrl = process.env.REACT_APP_API_URL;
 
   useEffect(() => {
     const check = localStorage.getItem("veggie");
@@ -17,16 +18,15 @@ function Veggie() {
       setVeggie(JSON.parse(check));
     } else {
       axios
-        .get(
-          `https://api.spoonacular.com/recipes/random?apiKey=${process.env.REACT_APP_API_KEY}&number=9&tags=vegetarian`
-        )
+        .get(`${apiUrl}/spoon/veggie`)
         .then((response) => {
           setVeggie(response.data.recipes);
           localStorage.setItem("veggie", JSON.stringify(response.data.recipes));
         })
         .catch((error) => {
           console.log(
-            "error: possible because of crossed daily limit for api key 1"
+            "error occured while getting veggie recipes",
+            error.message
           );
         });
     }

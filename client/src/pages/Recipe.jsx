@@ -11,7 +11,7 @@ function Recipe() {
   const [activeTab, setActiveTab] = useState("instructions");
   const [isBookmarked, setIsBookmarked] = useState(false);
 
-  const apiUrl = process.env.REACT_APP_SERVER_API_URL;
+  const apiUrl = process.env.REACT_APP_API_URL;
 
   const checkIfBookmarked = async () => {
     await axios
@@ -35,14 +35,16 @@ function Recipe() {
       });
   };
 
-  const fetchDetails = async () => {
+  const fetchDetails = async (name) => {
     axios
-      .get(
-        `https://api.spoonacular.com/recipes/${params.name}/information?apiKey=${process.env.REACT_APP_API_KEY2}`
-      )
+      .get(`${apiUrl}/spoon/recipe`, {
+        params: {
+          name: name,
+        },
+      })
       .then((response) => {
         const { image, title, id, instructions, summary, extendedIngredients } =
-          response.data;
+          response.data.data;
         setDetails({
           image,
           title,
@@ -111,7 +113,7 @@ function Recipe() {
   };
 
   useEffect(() => {
-    fetchDetails();
+    fetchDetails(params.name);
   }, [params.name]);
 
   useEffect(() => {

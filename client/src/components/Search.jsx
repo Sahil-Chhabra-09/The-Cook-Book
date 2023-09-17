@@ -28,8 +28,8 @@ function Search() {
 const FormStyle = styled.form`
   position: relative;
   width: 100%;
-  height: 35px;
-  margin-top: 32px;
+  height: 42px;
+  margin-top: 25px;
   input {
     background-color: brown;
     background: linear-gradient(35deg, #494949, #313131);
@@ -39,7 +39,7 @@ const FormStyle = styled.form`
     border-radius: 5px;
     border: none;
     width: 100%;
-    height: 35px;
+    height: 42px;
   }
   svg {
     position: absolute;

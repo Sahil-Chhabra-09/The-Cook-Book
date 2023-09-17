@@ -47,7 +47,7 @@ const Form = () => {
   const isDesktop = useMediaQuery("(min-width:600px)");
   const isLogin = pageType === "login";
   const isRegister = pageType === "register";
-  const apiUrl = process.env.REACT_APP_SERVER_API_URL;
+  const apiUrl = process.env.REACT_APP_API_URL;
 
   const dispatch = useDispatch();
 

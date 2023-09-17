@@ -12,6 +12,7 @@ import NoData from "../pages/NoData";
 
 function Popular() {
   const [popular, setPopular] = useState([]);
+  const apiUrl = process.env.REACT_APP_API_URL;
 
   useEffect(() => {
     const check = localStorage.getItem("popular");
@@ -21,9 +22,7 @@ function Popular() {
       setPopular(JSON.parse(check));
     } else {
       axios
-        .get(
-          `https://api.spoonacular.com/recipes/random?apiKey=${process.env.REACT_APP_API_KEY}&number=20`
-        )
+        .get(`${apiUrl}/spoon/popular`)
         .then((response) => {
           setPopular(response.data.recipes);
           //in local storage, we can only save strings. So, we need to convert the objects into the string
@@ -34,22 +33,9 @@ function Popular() {
         })
         .catch((error) => {
           console.log(
-            "error: possible because of crossed daily limit for api key 1"
+            "error occured while getting popular recipes",
+            error.message
           );
-          axios
-            .get(
-              `https://api.spoonacular.com/recipes/random?apiKey=${process.env.REACT_APP_API_KEY2}&number=20`
-            )
-            .then((response) => {
-              setPopular(response.data.recipes);
-              localStorage.setItem(
-                "popular",
-                JSON.stringify(response.data.recipes)
-              );
-            })
-            .catch((error) => {
-              console.log("error again");
-            });
         });
     }
   }, []);

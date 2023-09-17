@@ -8,6 +8,7 @@ const port = process.env.PORT || 3001;
 
 const authRouter = require("./routes/register");
 const BMarkRouter = require("./routes/Bookmark");
+const SpoonRouter = require("./routes/Spoonacular");
 const verifyToken = require("./middleware/verifyToken");
 
 app.use(morgan("common"));
@@ -15,6 +16,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/api/v1", authRouter);
+app.use("/api/v1/spoon", SpoonRouter);
 app.use("/api/v1/bmark", verifyToken, BMarkRouter);
 
 app.get("/", (req, res) => {

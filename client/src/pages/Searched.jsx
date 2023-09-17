@@ -7,12 +7,16 @@ import NoData from "./NoData";
 
 function Searched() {
   const [searchedRecipes, setSearchedRecipes] = useState([]);
+  const apiUrl = process.env.REACT_APP_API_URL;
+
   let params = useParams();
   const getSearched = async (name) => {
     await axios
-      .get(
-        `https://api.spoonacular.com/recipes/complexSearch?apiKey=${process.env.REACT_APP_API_KEY2}&number=12&query=${name}`
-      )
+      .get(`${apiUrl}/spoon/searched`, {
+        params: {
+          name: name,
+        },
+      })
       .then((response) => {
         setSearchedRecipes(response.data.results);
       })
