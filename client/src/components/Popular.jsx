@@ -35,7 +35,6 @@ class Popular extends Component {
           `https://api.spoonacular.com/recipes/random?apiKey=${process.env.REACT_APP_API_KEY}&number=20`
         )
         .then((response) => {
-          console.log(response);
           this.setState({
             popular: response.data.recipes,
           });

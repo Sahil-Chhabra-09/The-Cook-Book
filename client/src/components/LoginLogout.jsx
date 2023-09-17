@@ -10,7 +10,7 @@ import {
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { logoutAction } from "../redux/auth";
+import { loginAction, logoutAction } from "../redux/auth";
 import { useDispatch } from "react-redux";
 
 function LoginLogout() {
@@ -26,7 +26,9 @@ function LoginLogout() {
       localStorage.getItem("name") != null
     ) {
       setIsLoggedIn(true);
-      setName(localStorage.getItem("name"));
+      if (!isLoggedInGlobal) {
+        dispatch(loginAction());
+      }
     } else {
       setIsLoggedIn(false);
     }
@@ -35,6 +37,10 @@ function LoginLogout() {
   useEffect(() => {
     setIsLoggedIn(isLoggedInGlobal);
   }, [isLoggedInGlobal]);
+
+  useEffect(() => {
+    setName(localStorage.getItem("name"));
+  }, [isLoggedIn]);
 
   const navigate = useNavigate();
   const handleLoginOrLogout = () => {
@@ -116,7 +122,7 @@ function LoginLogout() {
 const Login = styled.div`
   position: absolute;
   right: 20px;
-  top: 0;
+  top: -6px;
   padding: 1rem 0rem;
   display: flex;
   justify-content: flex-start;

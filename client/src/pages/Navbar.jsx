@@ -11,8 +11,8 @@ function Navbar() {
     navigate("/");
   };
   return (
-    <div className="h-20 z-20">
-      <Nav className=" cursor-pointer" onClick={navigateToHome}>
+    <div className="h-16 z-20 border-b-2">
+      <Nav className="cursor-pointer" onClick={navigateToHome}>
         <GiKnifeFork />
         <Logo className="hidden md:block">The Cook Book</Logo>
       </Nav>
