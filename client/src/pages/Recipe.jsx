@@ -4,12 +4,14 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { FaBookmark } from "react-icons/fa";
 import { toast } from "react-toastify";
+import { useMediaQuery } from "@mui/material";
 
 function Recipe() {
   let params = useParams();
   const [details, setDetails] = useState({});
   const [activeTab, setActiveTab] = useState("instructions");
   const [isBookmarked, setIsBookmarked] = useState(false);
+  const isMobile = useMediaQuery("(max-width:768px)");
 
   const apiUrl = process.env.REACT_APP_API_URL;
 
@@ -31,7 +33,13 @@ function Recipe() {
         setIsBookmarked(res.data.exists);
       })
       .catch((error) => {
-        console.log("Error occured : ", error);
+        if (
+          error.message === "Request failed with status code 500" ||
+          error.response.status === 500
+        ) {
+          localStorage.removeItem("token");
+          localStorage.removeItem("uid");
+        }
       });
   };
 
@@ -141,30 +149,58 @@ function Recipe() {
       <img src={details.image} alt="Dish Image"></img>
       <Buttons>
         <Button
-          className={activeTab === "instructions" ? "active" : ""}
+          className={
+            activeTab === "instructions"
+              ? isMobile
+                ? "lactive"
+                : "active"
+              : ""
+          }
           onClick={() => setActiveTab("instructions")}
         >
-          Instructions
+          <span className="hidden md:block">Instructions</span>
+          <img
+            src="../../assets/instruction.png"
+            style={{ width: "45px" }}
+            className="md:hidden"
+          ></img>
         </Button>
         <Button
-          className={activeTab === "ingredients" ? "active" : ""}
+          className={
+            activeTab === "ingredients" ? (isMobile ? "lactive" : "active") : ""
+          }
           onClick={() => setActiveTab("ingredients")}
         >
-          Ingredients
+          <span className="hidden md:block">Ingredients</span>
+          <img
+            src="../../assets/cooking.png"
+            style={{ width: "45px" }}
+            className="md:hidden"
+          ></img>
         </Button>
       </Buttons>
       {activeTab === "instructions" && (
-        <div>
+        <>
+          <div className="font-mono font-thin text-xl md:hidden">
+            Instructions
+          </div>
           <h3 dangerouslySetInnerHTML={{ __html: details.instructions }}></h3>
           <h3 dangerouslySetInnerHTML={{ __html: details.summary }}></h3>
-        </div>
+        </>
       )}
       {activeTab === "ingredients" && (
-        <ul>
-          {details.extendedIngredients.map((ingredient) => (
-            <li key={ingredient.id}>{ingredient.original}</li>
-          ))}
-        </ul>
+        <>
+          <div className="font-mono font-thin text-xl md:hidden">
+            Ingredients
+          </div>
+          <div>
+            <ul>
+              {details.extendedIngredients.map((ingredient) => (
+                <li key={ingredient.id}>{ingredient.original}</li>
+              ))}
+            </ul>
+          </div>
+        </>
       )}
     </DetailWrapper>
   );
@@ -186,6 +222,9 @@ const DetailWrapper = styled.div`
     background: linear-gradient(35deg, #494949, #313131);
     color: white;
   }
+  .lactive {
+    background: linear-gradient(35deg, #8a8888, #ffffff, #8a8888);
+  }
   h2 {
     margin-bottom: 2rem;
   }
@@ -199,21 +238,17 @@ const DetailWrapper = styled.div`
 `;
 
 const Button = styled.button`
-  padding: 1rem 2rem;
+  padding: 1rem 3vw;
   color: #313131;
   background: white;
+  margin-inline: 5vw;
   font-weight: 600;
-  margin-inline: 2rem;
   border: 2px solid black;
   cursor: pointer;
 `;
 
-const Info = styled.div`
-  margin-left: 5rem;
-`;
-
 const Buttons = styled.div`
-  margin: 1rem 0rem;
+  margin: 2rem 0rem;
   display: flex;
   justify-content: space-between;
 `;
